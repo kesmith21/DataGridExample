@@ -7,4 +7,5 @@ The "init_SQLServer.py" file has a the code for using SQL Server as a data sourc
 
 The "queryService.py" file has a the code for using a REST API as a data source and uses the "Books.html" template.
 Note: the REST API is a seperate project that is deployed on my computer for testing.
-This has been placed in another repository called "REST_API".
+This has been placed in another repository called "REST_API" - this can be found at:
+https://github.com/kesmith21/REST_API
