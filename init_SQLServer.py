@@ -12,21 +12,12 @@ import requests
 app = Flask(__name__)
 app.secret_key = 'many random bytes'
 
-# mydb = pymssql.connect(host=r'(localdb)\V11.0', user=r'TestUser', password=r'1234',database=r'QE')
-mydb = pymssql.connect(host=r'V01SQL01', user=r'guest', password=r'guest',database=r'InfopumpDB')
+mydb = pymssql.connect(host=r'(localdb)\V11.0', user=r'TestUser', password=r'1234',database=r'QE')
+
 
 @app.route('/')
 def Index():
-    cur = mydb.cursor()
-    # cur = mydb.cursor()
-    # cur.execute("SELECT TOP (1) ITEM_ID, QUANTITY, COST  FROM [InfopumpDB].[dbo].[PARSCIT] where ITEM_ID  = '426110614000'  order by SEQUENCE desc")
-    # data = cur.fetchall()
-    # cur.close()
 
-
-    # return render_template('index2.html', students=data)
-    # print(data)
-    # return render_template('PriceSearch.html', prices=data)
     return render_template('PriceSearch.html')
 
 
@@ -39,14 +30,6 @@ def search():
 
         cur = mydb.cursor()
 
-        # cur = mydb.cursor()
-        # print (name, email, phone)
-        # print(part)
-        # return (request.form['part'])
-        # cur.execute("""SELECT TOP (1) ITEM_ID, QUANTITY, COST, COST/QUANTITY as Each  FROM [InfopumpDB].[dbo].[PARSCIT] where ITEM_ID  like %s
-        # and QUANTITY >0 and COST > 0
-        # order by SEQUENCE desc""",
-        #             (part))
         cur.execute("""SELECT  dbo.PARSCIT.ITEM_ID, dbo.PARSCIT.QUANTITY, dbo.PARSCIT.COST
 ,format(cast(case when COST>0 and QUANTITY >0 then COST/QUANTITY else 0 end as decimal(10,2)),'C', 'en-US' )  AS Each
 --,cast(COST/QUANTITY as decimal(10,2))*1  AS Each
@@ -70,8 +53,7 @@ def insert():
         email = request.form['email']
         phone = request.form['phone']
         cur = mydb.cursor()
-        # cur = mydb.cursor()
-        # print (name, email, phone)
+
         cur.execute("INSERT INTO students"
                     " (name, email, phone) VALUES (%s, %s, %s)", (name, email, phone))
         cur.connection.commit()
