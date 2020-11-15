@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include "header.html" %}
+<head>
+    <meta charset="UTF-8">
+
+    <title>Strip Registration</title>
+
+    <link rel="shortcut icon" href="{{url_for('static', filename = 'ToyotaLogo.png' )}}">
+    <link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{url_for('static', filename = 'css/style.css')}}" rel="stylesheet">
+
+    <script type="text/javascript" src="{{url_for('static', filename='js/jquery-1.10.2.min.js') }}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename = 'js/bootstrap.min.js')}}"></script>
+
+    <script type="text/javascript" src="{{url_for('static', filename = 'js/jquery-3.3.1.js')}}"></script>
+    <link href="{{url_for('static', filename = 'css/jquery.dataTables.min.css')}}" rel="stylesheet">
+    <script type="text/javascript" src="{{url_for('static', filename = 'js/jquery.dataTables.min.js')}}"></script>
+
+    <style>
+select, input {
+  margin-left: 10px;
+  margin-right: 25px;
+}
+table{
+  padding: 10px;
+}
+
+    </style>
+    <!--    <script type="text/javascript" src="{{url_for('static', filename = 'js/datatablePlugIn.js')}}"></script>-->
+    <script>
+        $(document).ready( function () {
+    $('#example').DataTable();
+<!--        $('#example').DataTable({-->
+<!--    rowCallback: function(row, data,index) {-->
+<!--    if (data.ID == "2007") {-->
+<!--    $("td:eq(0)",row).addClass("green");-->
+<!--    };-->
+} );
+
+    </script>
+    <!--        $(document).ready(function(){-->
+    <!--            $(".dropdown-menu li a").click(function(){-->
+    <!--            $("#options").text($(this).text());-->
+    <!--            });-->
+    <!--        });-->
+    <script>
+    $(document).ready(function() {
+
+
+    $('#mySelect').on('change',function(){
+    var selected = this.value;
+    oTable =  $('#example').DataTable();
+        if (selected != "All") {
+
+        oTable.columns(0).search(selected, true, false).draw();
+
+        }
+        else {
+         oTable.search( '' ).columns().search( '' ).draw();
+        }
+    });
+});
+
+    </script>
+
+</head>
+<body>
+<h4>Countermeasure List</h4> <br>
+
+<select id="mySelect">
+    <option value="{{colours[0]}}" selected>{{colours[0]}}</option>
+    {% for colour in colours[1:] %}
+    <option value="{{colour}}">{{colour}}</option>
+    {% endfor %}
+</select>
+
+<br><br>
+
+<table id="example" class="display" style="width:100%">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>DateAdded</th>
+        <th>DateClosed</th>
+        <th>Item</th>
+        <th>Portion</th>
+        <th>Discrepancy</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in countermeasures %}
+    <tr position={{row.0}}>
+        <td>{{row.0}}</td>
+        <td>{{row.1}}</td>
+        <td>{{row.2}}</td>
+        <td>{{row.3}}</td>
+        <td>{{row.4}}</td>
+        <td>{{row.5}}</td>
+        <td>
+
+            <!--            href="/update/{{ row.0 }}" -->
+            <a class="btn btn-warning btn-xs" data-toggle="modal" href="#modaledit"
+               data-target="#modaledit{{row.0}}">Edit</a>
+            <a href="/delete/{{ row.0 }}" class="btn btn-danger btn-xs"
+               onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+
+        </td>
+
+    </tr>
+
+    <!--    style="width:600px"-->
+
+    <div id="modaledit{{row.0}}" class="modal fade" role="dialog">
+
+        <div class="modal-dialog">
+
+            <div class="modal-content" style="width:800px; height:600px">
+                <div class="modal-header">
+
+
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Update Information</h4>
+
+                </div>
+
+
+                <form action="{{ url_for('update') }}" method="POST">
+                    <input type="hidden" name="CounterMeasureID" value="{{row.0}}">
+                    <div class="container">
+
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="tab" href="#menu0">QC Data</a></li>
+                            <li><a data-toggle="tab" href="#menu1">Why Made</a></li>
+                            <li><a data-toggle="tab" href="#menu2">Why Shipped</a></li>
+                            <li><a data-toggle="tab" href="#menu3">Approval</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                            <div id="menu0" class="tab-pane fade in active">
+                                <input type="text" class="form-control" name="item" value="{{row.3}}">
+                                <input type="text" class="form-control" name="portion" value="{{row.4}}">
+                                <label>Discrepancy:</label>
+                                <input type="text" class="form-control" name="discrepancy" value="{{row.5}}">
+                            </div>
+                            <div id="menu1" class="tab-pane fade">
+
+
+                            </div>
+                            <div id="menu2" class="tab-pane fade">
+
+
+                            </div>
+                            <div id="menu3" class="tab-pane fade">
+
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
+                </form>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="sbumit">Save</button>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endfor %}
+    </tbody>
+</table>
+
+<button type="button" class="btn btn-success  pull-right" data-toggle="modal" data-target="#myModal">Add CM
+    Data
+</button>
+
+<div id="myModal" class="modal fade" role="dialog">
+
+
+    <div class="modal-dialog">
+
+
+        <div class="modal-content">
+
+
+            <div class="modal-header">
+
+
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+
+                <h4 class="modal-title">Please Insert Data</h4>
+
+
+            </div>
+
+
+            <div class="modal-body">
+
+
+                <form action="{{ url_for('insert') }}" method="POST">
+
+
+                    <div class="form-group">
+
+
+                        <label>Name:</label>
+                        <input type="text" class="form-control" name="name" required="1">
+
+
+                    </div>
+
+
+                    <div class="form-group">
+
+
+                        <label>Email:</label>
+                        <input type="text" class="form-control" name="email" required="1">
+                        <div class="input-group">
+                            <input id="buttondropdown" name="buttondropdown" class="form-control"
+                                   placeholder="placeholder" type="text">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle"
+                                        data-toggle="dropdown">
+                                    Action
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu pull-right">
+                                    <li><a href="#">Option one</a></li>
+                                    <li><a href="#">Option two</a></li>
+                                    <li><a href="#">Option three</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+
+
+                            <label>Phone:</label>
+                            <input type="text" class="form-control" name="phone" required="1">
+
+
+                        </div>
+
+
+                        <div class="form-group">
+
+
+                            <button class="btn btn-primary" type="submit">Insert Data</button>
+
+
+                        </div>
+
+
+                </form>
+
+
+            </div>
+
+
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+    <!--    pivot references-->
+    <!--    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>-->
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <link src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.13.0/pivot.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.13.0/pivot.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pivottable/2.6.0/tips_data.min.js"></script>
+    <title>Title</title>
+    <script>
+
+<!--$(function(){-->
+<!--        var utils = $.pivotUtilities.tipsData;-->
+<!--var heatmap =  utils.renderers["Heatmap"];-->
+<!--var sumOverSum =  utils.aggregators["Sum over Sum"];-->
+
+<!--$("#output").pivot(-->
+<!--  utils.tipsData, {-->
+<!--    rows: ["sex", "smoker"],-->
+<!--    cols: ["day", "time"],-->
+<!--    aggregator: sumOverSum(["tip", "total_bill"]),-->
+<!--    renderer: heatmap-->
+<!--  });-->
+<!--});-->
+$(function(){
+        $("#output").pivot(
+            [
+                {color: "blue", shape: "circle"},
+                {color: "red", shape: "triangle"}
+            ],
+            {
+                rows: ["color"],
+                cols: ["shape"]
+            }
+        );
+     });
+
+
+
+    </script>
+</head>
+<body>
+<div id="output"></div>
+
+</body>
+</html>
