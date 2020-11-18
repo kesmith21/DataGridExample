@@ -8,11 +8,20 @@ from fnmatch import fnmatch
 from pathlib import Path
 import time
 import requests
+import sqlite3
 
 app = Flask(__name__)
 app.secret_key = 'many random bytes'
 
 mydb = pymssql.connect(host=r'(localdb)\V11.0', user=r'TestUser', password=r'1234',database=r'QE')
+
+def db_connection():
+    conn = None
+    try:
+        conn = sqlite3.connect("books.sqlite")
+    except sqlite3.error as e:
+        print(e)
+    return conn
 
 
 @app.route('/')
@@ -44,20 +53,29 @@ FROM            dbo.PARSCIT INNER JOIN
         cur.close()
         return render_template('PriceSearch.html', prices=data)
 
-@app.route('/insert', methods = ['POST'])
-def insert():
+@app.route('/insertBook', methods = ['POST'])
+def books():
+    conn = db_connection()
+    cursor = conn.cursor()
+
+    # if request.method == "GET":
+    #     cursor = conn.execute("SELECT * FROM book")
+    #     books = [
+    #         dict(id=row[0], author=row[1], language=row[2], title=row[3])
+    #         for row in cursor.fetchall()
+    #     ]
+    #     if books is not None:
+    #         return jsonify(books)
 
     if request.method == "POST":
-        flash("Data Inserted Successfully")
-        name = request.form['name']
-        email = request.form['email']
-        phone = request.form['phone']
-        cur = mydb.cursor()
-
-        cur.execute("INSERT INTO students"
-                    " (name, email, phone) VALUES (%s, %s, %s)", (name, email, phone))
-        cur.connection.commit()
-        return redirect(url_for('Index'))
+        new_author = request.form["author"]
+        new_lang = request.form["language"]
+        new_title = request.form["title"]
+        sql = """INSERT INTO book (author, language, title)
+                 VALUES (?, ?, ?)"""
+        cursor = cursor.execute(sql, (new_author, new_lang, new_title))
+        conn.commit()
+        return f"Book with the id: 0 created successfully", 201
 
 @app.route('/delete/<string:id_data>', methods = ['GET'])
 def delete(id_data):
@@ -102,6 +120,31 @@ def FileList():
                                     LastMod=time.strftime('%m/%d/%Y %H:%M:%S', time.localtime(os.path.getmtime(os.path.join(path, name))))))
     # print(keylist)
     return render_template('FileList.html', data=keylist)
+
+@app.route('/insertBook', methods = ['POST'])
+def insert():
+    def books():
+        conn = db_connection()
+        cursor = conn.cursor()
+
+        if request.method == "GET":
+            cursor = conn.execute("SELECT * FROM book")
+            books = [
+                dict(id=row[0], author=row[1], language=row[2], title=row[3])
+                for row in cursor.fetchall()
+            ]
+            if books is not None:
+                return jsonify(books)
+
+        if request.method == "POST":
+            new_author = request.form["author"]
+            new_lang = request.form["language"]
+            new_title = request.form["title"]
+            sql = """INSERT INTO book (author, language, title)
+                     VALUES (?, ?, ?)"""
+            cursor = cursor.execute(sql, (new_author, new_lang, new_title))
+            conn.commit()
+            return f"Book with the id: 0 created successfully", 201
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
 
-    <title>Students</title>
+    <title>Books</title>
     <link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
     <link rel="shortcut icon" href="{{url_for('static', filename = 'ToyotaLogo.png' )}}">
     <link href="{{url_for('static', filename = 'css/bootstrap.min.css')}}" rel="stylesheet">
@@ -22,26 +22,30 @@
     $('#example').DataTable();
 } );
 
+
+
     </script>
 </head>
 <body>
-<h2>Student List
-    <button type="button" class="btn btn-success  pull-right" data-toggle="modal" data-target="#myModal">Add Student
-        Data
+<h2>Books
+    <button type="button" class="btn btn-success  pull-right" data-toggle="modal" data-target="#myModal">Add Book
     </button>
 </h2>
+<h3>from SQL Lite</h3>
 <table id="example" class="display" style="width:100%">
     <thead>
     <tr>
-        <th>Serial</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Action</th>
+
+        <th>ID</th>
+        <th>Author</th>
+        <th>Language</th>
+        <th>Title</th>
+
     </tr>
     </thead>
     <tbody>
-    {% for row in students %}
+    {% for row in r %}
+    <!--for SQL returned Data-->
     <tr>
         <td>{{row.0}}</td>
         <td>{{row.1}}</td>
@@ -54,9 +58,8 @@
                onclick="return confirm('Are You Sure For Delete?')">Delete</a>
 
         </td>
-
     </tr>
-<!--Update -->
+<!--    Update-->
     <div id="modaledit{{row.0}}" class="modal fade" role="dialog">
 
 
@@ -85,10 +88,19 @@
                         <div class="form-group">
 
 
-                            <label>Name:</label>
+                            <label>Author:</label>
                             <input type="hidden" name="id" value="{{row.0}}">
+                            <input type="text" class="form-control" name="author" value="{{row.1}}">
 
-                            <input type="text" class="form-control" name="name" value="{{row.1}}">
+                        </div>
+
+
+                        <div class="form-group">
+
+
+                            <label>Language:</label>
+
+                            <input type="text" class="form-control" name="language" value="{{row.2}}">
 
 
                         </div>
@@ -97,20 +109,9 @@
                         <div class="form-group">
 
 
-                            <label>Email:</label>
+                            <label>Title:</label>
 
-                            <input type="text" class="form-control" name="email" value="{{row.2}}">
-
-
-                        </div>
-
-
-                        <div class="form-group">
-
-
-                            <label>Phone:</label>
-
-                            <input type="text" class="form-control" name="phone" value="{{row.3}}">
+                            <input type="text" class="form-control" name="title" value="{{row.3}}">
 
 
                         </div>
@@ -118,9 +119,7 @@
 
                         <div class="form-group">
 
-
-                            <button class="btn btn-primary" type="sbumit">Update</button>
-
+                            <button class="btn btn-primary" type="submit">Update</button>
 
                         </div>
 
@@ -172,36 +171,20 @@
 
 
                     <div class="form-group">
-                        <label>Name:</label>
-                        <input type="text" class="form-control" name="name" required="1">
+                        <label>Author:</label>
+                        <input type="text" class="form-control" name="author" required="1">
                     </div>
 
                     <div class="form-group">
-                        <label>Email:</label>
-                        <input type="text" class="form-control" name="email" required="1">
-                        <div class="input-group">
-                            <input id="buttondropdown" name="buttondropdown" class="form-control"
-                                   placeholder="placeholder" type="text">
-                            <div class="input-group-btn">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    Action
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu pull-right">
-                                    <li><a href="#">Option one</a></li>
-                                    <li><a href="#">Option two</a></li>
-                                    <li><a href="#">Option three</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Phone:</label>
-                            <input type="text" class="form-control" name="phone" required="1">
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-primary" type="submit">Insert Data</button>
-                        </div>
-
+                        <label>Language:</label>
+                        <input type="text" class="form-control" name="language" required="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Title:</label>
+                        <input type="text" class="form-control" name="title" required="1">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" type="submit">Insert Data</button>
                     </div>
 
                     <div class="modal-footer">
