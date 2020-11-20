@@ -29,6 +29,15 @@ def getbooks():
 
     return render_template('BooksRestAPI.html',r=r.json())
 
+@app.route('/GetUser')
+def getbooks():
+    r = requests.get("http://tmmk-wwebp26/UserManagementSvc/UserManagementService.svc?wsdl","GET")
+
+    return r.json()
+
+
+#
+
 @app.route('/insert', methods = ['POST'])
 def insert():
 
