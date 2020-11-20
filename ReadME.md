@@ -16,3 +16,7 @@ The "queryService.py" file has a the code for using a REST API as a data source 
 Note: the REST API is a seperate project that is deployed on my computer for testing.
 This has been placed in another repository called "REST_API" - this can be found at:
 https://github.com/kesmith21/REST_API
+
+To add requirements file, enter "pip freeze > requirements.txt" at the terminal prompt.
+Here's a link to a good tutorial on how to clone an app to PythonAnywhere:
+https://www.youtube.com/watch?v=5jbdkOlf4cY&t=8s
